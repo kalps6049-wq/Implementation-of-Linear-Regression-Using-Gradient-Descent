@@ -22,36 +22,66 @@ To write a program to predict the profit of a city using the linear regression m
 
 ## Program:
 ```
-/*
-Program to implement the linear regression using gradient descent.
-Developed by: Vedha M
-RegisterNumber:25012201
-*/
 import numpy as np
-from sklearn.linear_model import LinearRegression
+import pandas as pd 
 import matplotlib.pyplot as plt
 
-# Sample data (X = input, y = output)
-X = np.array([1, 2, 3, 4, 5]).reshape(-1, 1)
-y = np.array([2, 4, 5, 4, 5])
+data = pd.read_csv("C:/Users/acer/Downloads/50_Startups.csv")
+x = data["R&D Spend"].values
+y = data["Profit"].values
 
-# Create and train the model
-model = LinearRegression()
-model.fit(X, y)
+x_mean = np.mean(x)
+x_std = np.std(x)
+x = (x - x_mean) /x_std
 
-# Make predictions
-y_pred = model.predict(X)
+w = 0.0
+b = 0.0
+alpha = 0.01
+epochs = 100
+n = len(x)
 
-# Print results
-print("Slope (Coefficient):", model.coef_[0])
-print("Intercept:", model.intercept_)
+losses = []
 
-# Plot the data and regression line
-plt.scatter(X, y, color='blue', label='Actual Data')
-plt.plot(X, y_pred, color='red', label='Regression Line')
-plt.xlabel("X")
-plt.ylabel("y")
-plt.legend()
+for _ in range(epochs):
+    y_hat = w * x+b
+    loss = np.mean((y_hat - y) ** 2)
+    losses.append(loss)
+    
+    dw = (2/n) * np.sum((y_hat - y) * x)
+    db = (2/n) * np.sum(y_hat - y)
+    
+    w -= alpha * dw
+    b -= alpha * db
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+plt.plot(losses)
+plt.xlabel("Iterations")
+plt.ylabel("Loss (MSE)")
+plt.title("Loss vs Iterations")
+
+plt.subplot(1, 2, 2)
+plt.scatter(x, y)
+
+x_sorted = np.argsort(x)
+plt.plot(
+    x[x_sorted],
+    (w * x + b)[x_sorted],
+    color="red"
+)
+plt.xlabel("R&D Spend (scaled)")
+plt.ylabel("Profit")
+plt.title("Linear Regression Fit")
+
+plt.tight_layout()
+plt.show()
+
+print("Final weight (w):", w)
+print("Final bias (b):", b)
 
 Program to implement the linear regression using gradient descent.
 Developed by: KALPANA M
@@ -60,7 +90,8 @@ RegisterNumber: 212225240064
 ```
 
 ## Output:
-<img width="1103" height="620" alt="Screenshot 2026-04-28 090105" src="https://github.com/user-attachments/assets/b2e85027-4fa6-4325-8946-39054392147f" />
+<img width="1304" height="605" alt="Screenshot 2026-04-28 093146" src="https://github.com/user-attachments/assets/80bd8809-d2ca-4d5d-9850-e0b0d690d532" />
+
 
 
 
